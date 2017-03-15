@@ -43,12 +43,12 @@ class Graph:
         plt.show()
     def logBinDegrees(self):
         deg = self.G.degree().values()
-        bins, dat = log_bin(deg,a=1.25)
-        plt.scatter(bins,dat)
+        bins, dat = log_bin(deg,a=2)
+        plt.plot(bins,dat)
         plt.xscale('log')
         plt.yscale('log')
         plt.ylim(1e-10,1)
-        plt.show()
+        #plt.show()
 
 class BAGraph(Graph):
     def generateEdges(self):
@@ -102,9 +102,13 @@ def main():
     N = int(1e6)
     m = 2
     L = 10
-    g = RWGraph(N,m)
-    g.generateGraph(L)
-    g.logBinDegrees()
+    for i in range(5):
+        print i
+        N = pow(10,i+2)
+        g = BAGraph(N,m)
+        g.generateGraph()
+        g.logBinDegrees()
+    plt.show()
 
 if (__name__ == '__main__'):
     main()
