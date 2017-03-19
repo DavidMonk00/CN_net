@@ -8,12 +8,14 @@ from log_bin_CN_2016 import log_bin
 class Graph:
     nodes = []
     t = 1
-    N = 9
     def __init__(self, N_max, m):
         self.N_max = N_max
         self.m = m
-        self.G = nx.cycle_graph(10)
+        self.G = nx.cycle_graph(m+1)
+        self.N = m+1
         self.nodes = self.G.nodes()
+        #nx.draw(self.G)
+        #plt.show()
     def addVertex(self):
         self.N += 1
         self.G.add_node(self.N)
@@ -43,11 +45,12 @@ class Graph:
         plt.show()
     def logBinDegrees(self):
         deg = self.G.degree().values()
-        bins, dat = log_bin(deg,a=2)
-        plt.plot(bins,dat)
+        bins, dat = log_bin(deg,a=1.15)
+        '''plt.scatter(bins,dat)
         plt.xscale('log')
         plt.yscale('log')
-        plt.ylim(1e-10,1)
+        plt.ylim(1e-10,1)'''
+        return bins,dat
         #plt.show()
 
 class BAGraph(Graph):
@@ -101,14 +104,30 @@ class RWGraph(Graph):
 def main():
     N = int(1e6)
     m = 2
-    L = 10
-    for i in range(5):
+    L = 20
+    kn = []
+    ksd = []
+    for i in range(17):
+        k = []
         print i
-        N = pow(10,i+2)
-        g = BAGraph(N,m)
-        g.generateGraph()
-        g.logBinDegrees()
-    plt.show()
+        for j in range(20):
+            N = pow(2,i+1)
+            g = BAGraph(N,m)
+            g.generateGraph()
+            k.append(max(g.G.degree().values()))
+        kn.append(np.mean(k))
+        ksd.append(np.std(k))
+    x = [pow(2,i+1) for i in range(17)]
+    plt.errorbar(x,kn,yerr=ksd)
+        #g.logBinDegrees()
+        #nx.draw(g.G)
+        #plt.show()
+
+
+
 
 if (__name__ == '__main__'):
     main()
+    plt.xscale('log')
+    plt.yscale('log')
+    plt.show()
