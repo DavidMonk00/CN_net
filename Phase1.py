@@ -37,9 +37,10 @@ class Phase1:
         colors = iter(cm.rainbow(np.linspace(0, 1, Nlim)))
         for i in range(1,Nlim):
             print "Testing N = ", pow(10,i)
-            data = []
+            data = np.zeros(100)
             B = np.zeros(0)
             for j in range(repeats):
+                print j
                 g = BAGraph(pow(10,i),m)
                 g.generateGraph()
                 bins, dat = g.logBinDegrees()
@@ -47,9 +48,9 @@ class Phase1:
                     B = bins
                 d = np.zeros(100)
                 d[:len(dat)] = dat
-                data.append(d)
-            dat = np.mean(data, axis=0)[:len(bins)]
-            plt.scatter(bins, dat, color=next(colors), label="N = %d"%(pow(10,i)))
+                data += d
+            dat = data[:len(B)]/repeats
+            plt.scatter(B, dat, color=next(colors), label="N = %d"%(pow(10,i)))
         plt.xscale('log')
         plt.yscale('log')
         plt.ylim(1e-11,1)
