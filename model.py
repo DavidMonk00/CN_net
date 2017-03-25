@@ -11,7 +11,7 @@ class Graph:
     def __init__(self, N_max, m):
         self.N_max = N_max
         self.m = m
-        self.G = nx.cycle_graph(m+1)
+        self.G = nx.complete_graph(m+1)
         self.N = m+1
         self.nodes = self.G.nodes()
         #nx.draw(self.G)
@@ -100,34 +100,3 @@ class RWGraph(Graph):
             n.append(node)
             self.addEdge(node1,node)
         self.nodes.append(node1)
-
-def main():
-    N = int(1e6)
-    m = 2
-    L = 20
-    kn = []
-    ksd = []
-    for i in range(17):
-        k = []
-        print i
-        for j in range(20):
-            N = pow(2,i+1)
-            g = BAGraph(N,m)
-            g.generateGraph()
-            k.append(max(g.G.degree().values()))
-        kn.append(np.mean(k))
-        ksd.append(np.std(k))
-    x = [pow(2,i+1) for i in range(17)]
-    plt.errorbar(x,kn,yerr=ksd)
-        #g.logBinDegrees()
-        #nx.draw(g.G)
-        #plt.show()
-
-
-
-
-if (__name__ == '__main__'):
-    main()
-    plt.xscale('log')
-    plt.yscale('log')
-    plt.show()

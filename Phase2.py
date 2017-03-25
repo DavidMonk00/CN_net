@@ -13,7 +13,8 @@ class Phase1:
             B = np.zeros(0)
             print "Testing m = ", pow(3,i)
             for j in range(repeats):
-                g = BAGraph(N,pow(3,i))
+                print j
+                g = PRAGraph(N,pow(3,i))
                 g.generateGraph()
                 bins, dat = g.logBinDegrees()
                 if len(bins) > len(B):
@@ -30,7 +31,7 @@ class Phase1:
         plt.xlabel(r"$k$", fontsize=18)
         plt.ylabel(r"$p\left( k \right)$", fontsize=18)
         plt.legend(loc=0)
-        plt.savefig('./images/Phase1/plot_m_1e4_%d'%repeats)
+        plt.savefig('./images/Phase2/plot_m_1e4_%d'%repeats)
         print "m test complete."
     def plotDifferentN(self, m, repeats=10):
         Nlim = 7
@@ -41,7 +42,7 @@ class Phase1:
             B = np.zeros(0)
             for j in range(repeats):
                 print j
-                g = BAGraph(pow(10,i),m)
+                g = PRAGraph(pow(10,i),m)
                 g.generateGraph()
                 bins, dat = g.logBinDegrees()
                 if len(bins) > len(B):
@@ -58,7 +59,7 @@ class Phase1:
         plt.xlabel(r"$k$", fontsize=18)
         plt.ylabel(r"$p\left( k \right)$", fontsize=18)
         plt.legend(loc=0)
-        plt.savefig('./images/Phase1/plot_N_3_%d'%repeats)
+        plt.savefig('./images/Phase2/plot_N_3_%d'%repeats)
         print "N test complete."
     def plotGreatestDegree(self, m, repeats=10):
         Nlim = 17
@@ -69,7 +70,7 @@ class Phase1:
             print "Testing greatest degree for N = ", pow(2,i)
             for j in range(repeats):
                 N = pow(2,i+1)
-                g = BAGraph(N,m)
+                g = PRAGraph(N,m)
                 g.generateGraph()
                 k.append(max(g.G.degree().values()))
             kn.append(np.mean(k))
@@ -80,7 +81,7 @@ class Phase1:
         plt.yscale('log')
         plt.xlabel(r"$N$", fontsize=18)
         plt.ylabel(r"$k_1$", fontsize=18)
-        plt.savefig('./images/Phase1/plot_k_3_%d'%repeats)
+        plt.savefig('./images/Phase2/plot_k_3_%d'%repeats)
         print "k test complete."
     def collapseData(self, m, repeats=10):
         Nlim = 7
@@ -91,7 +92,7 @@ class Phase1:
             data = []
             B = np.zeros(0)
             for j in range(repeats):
-                g = BAGraph(pow(10,i),m)
+                g = PRAGraph(pow(10,i),m)
                 g.generateGraph()
                 bins, dat = g.logBinDegrees()
                 if len(bins) > len(B):
@@ -110,29 +111,8 @@ class Phase1:
         plt.xlabel(r"$k$", fontsize=18)
         plt.ylabel(r"$p\left( k \right)$", fontsize=18)
         plt.legend(loc=3)
-        plt.savefig('./images/Phase1/collapse_3_%d'%repeats)
+        plt.savefig('./images/Phase2/collapse_3_%d'%repeats)
         print "Data collapse complete."
-    def getNData(self, N, m, repeats):
-        print "Testing N = ", pow(10,N)
-        data = np.zeros(100)
-        B = np.zeros(0)
-        for j in range(repeats):
-            print j
-            g = BAGraph(pow(10,N),m)
-            g.generateGraph()
-            bins, dat = g.logBinDegrees()
-            if len(bins) > len(B):
-                B = bins
-            d = np.zeros(100)
-            d[:len(dat)] = dat
-            data += d
-        dat = data[:len(B)]/repeats
-        x = np.zeros((len(dat),2))
-        x[:,0] = B
-        x[:,1] = dat
-        np.savetxt("Ndat",x)
-        print "N test complete."
-
 
 def main():
     p = Phase1()
@@ -144,8 +124,6 @@ def main():
         p.plotGreatestDegree(3, repeats = int(sys.argv[2]))
     elif (sys.argv[1] == 'c'):
         p.collapseData(3, repeats = int(sys.argv[2]))
-    elif (sys.argv[1] == 'd'):
-        p.getNData(6,3,int(sys.argv[2]))
 
 if (__name__ == '__main__'):
     main()
