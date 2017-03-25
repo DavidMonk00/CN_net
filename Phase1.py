@@ -132,7 +132,28 @@ class Phase1:
         x[:,1] = dat
         np.savetxt("Ndat",x)
         print "N test complete."
-
+    def getk1Data(self,m,repeats):
+        Nlim = 17
+        kn = []
+        ksd = []
+        for i in range(Nlim):
+            k = []
+            print "Testing greatest degree for N = ", pow(2,i)
+            for j in range(repeats):
+                print j
+                N = pow(2,i+1)
+                g = BAGraph(N,m)
+                g.generateGraph()
+                k.append(max(g.G.degree().values()))
+            kn.append(np.mean(k))
+            ksd.append(np.std(k))
+        x = [pow(2,i+1) for i in range(Nlim)]
+        y = np.zeros((len(kn),3))
+        y[:,0] = x
+        y[:,1] = kn
+        y[:,2] = ksd
+        np.savetxt("k1dat", y)
+        print "k test complete."
 
 def main():
     p = Phase1()
@@ -146,6 +167,8 @@ def main():
         p.collapseData(3, repeats = int(sys.argv[2]))
     elif (sys.argv[1] == 'd'):
         p.getNData(6,3,int(sys.argv[2]))
+    elif (sys.argv[1] == 'k1'):
+        p.getk1Data(3,int(sys.argv[2]))
 
 if (__name__ == '__main__'):
     main()
