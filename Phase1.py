@@ -140,7 +140,6 @@ class Phase1:
             k = []
             print "Testing greatest degree for N = ", pow(2,i)
             for j in range(repeats):
-                print j
                 N = pow(2,i+1)
                 g = BAGraph(N,m)
                 g.generateGraph()
@@ -154,6 +153,31 @@ class Phase1:
         y[:,2] = ksd
         np.savetxt("k1dat", y)
         print "k test complete."
+    def getmData(self, N, repeats):
+        mlim = 6
+        colors = iter(cm.rainbow(np.linspace(0, 1, mlim)))
+        for i in range(1,mlim):
+            data = []
+            B = np.zeros(0)
+            print "Testing m = ", pow(3,i)
+            for j in range(repeats):
+                print j
+                g = BAGraph(N,pow(3,i))
+                g.generateGraph()
+                bins, dat = g.logBinDegrees()
+                if len(bins) > len(B):
+                    B = bins
+                d = np.zeros(100)
+                d[:len(dat)] = dat
+                data.append(d)
+            dat = np.mean(data, axis=0)[:len(B)]
+            std = np.std(data,axis=0)[:len(B)]
+            x = np.zeros((len(B),3))
+            x[:,0] = B
+            x[:,1] = dat
+            x[:,2] = std
+            np.savetxt("mdat_"+str(pow(3,i)),x)
+        print "m test complete."
 
 def main():
     p = Phase1()
@@ -167,8 +191,8 @@ def main():
         p.collapseData(3, repeats = int(sys.argv[2]))
     elif (sys.argv[1] == 'd'):
         p.getNData(6,3,int(sys.argv[2]))
-    elif (sys.argv[1] == 'k1'):
-        p.getk1Data(3,int(sys.argv[2]))
+    elif (sys.argv[1] == 'mdat'):
+        p.getmData(pow(10,5),int(sys.argv[2]))
 
 if (__name__ == '__main__'):
     main()
